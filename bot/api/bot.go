@@ -49,7 +49,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			return
 		}
-		msg := tgbotapi.NewChatPhoto(update.Message.Chat.ID, tgbotapi.FileBytes{
+		msg := tgbotapi.NewPhoto(update.Message.Chat.ID, tgbotapi.FileBytes{
 			Name:  "onetext.png",
 			Bytes: img,
 		})
