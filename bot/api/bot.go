@@ -59,6 +59,13 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if update.Message.Command() == "custom" {
+		if update.Message.CommandArguments() == "" {
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Please input your custom text. Spilt arguments by newline.\n```For example:\n/custom Some random text\nAuthor\nSource```")
+			msg.ParseMode = tgbotapi.ModeMarkdownV2
+			msg.ReplyToMessageID = update.Message.MessageID
+			_, _ = bot.Send(msg)
+			return
+		}
 		var s onetext.Sentence
 		msgText := update.Message.CommandArguments()
 		args := strings.Split(msgText, "\n")
