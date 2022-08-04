@@ -71,10 +71,8 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		msgText := update.Message.CommandArguments()
 		args := strings.Split(msgText, "\n")
 		for _, arg := range args {
-			arg = strings.ReplaceAll(arg, "\\\\", "\\")
 			if strings.HasPrefix(arg, "text:") {
-				fmt.Println(arg)
-				s.Text = strings.TrimPrefix(arg, "text:")
+				s.Text = fmt.Sprintf("%s", strings.TrimPrefix(arg, "text:"))
 			}
 			if strings.HasPrefix(arg, "from:") {
 				s.From = strings.TrimPrefix(arg, "from:")
