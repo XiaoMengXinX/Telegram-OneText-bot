@@ -32,7 +32,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 		return nil, err
 	}
 
-	textContent := gg.NewContext(1080, 2000)
+	textContent := gg.NewContext(1080, 4000)
 	textContent.SetHexColor("#FFFFFF")
 	setFontFace(textContent, f, 59)
 	textContent.SetHexColor("#000000")
