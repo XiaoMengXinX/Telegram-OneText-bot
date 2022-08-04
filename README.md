@@ -6,9 +6,9 @@ A telegram bot to create onetext image
 
 On telegram group or private chat, send a special command to the bot:
 
-`/onetext` - Get a onetext image
+`/onetext` - Get an onetext image
 
-`/custom` - Create a onetext image with your own text
+`/custom` - Create an onetext image with your own text
 
 For example, send the following message to the bot:
 
@@ -18,7 +18,7 @@ Author
 Source
 ```
 
-Then you will get a onetext image like this:
+Then you will get an onetext image like this:
 
 <img src="https://user-images.githubusercontent.com/19994286/182917358-8c3c9efe-509a-4f47-b2ff-67f55afd432b.jpg" width="60%" height="60%">
 
