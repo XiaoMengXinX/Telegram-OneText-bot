@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -70,8 +71,9 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		msgText := update.Message.CommandArguments()
 		args := strings.Split(msgText, "\n")
 		for _, arg := range args {
-			arg = strings.ReplaceAll(arg, `\\`, `\`)
+			arg = strings.ReplaceAll(arg, "\\\\", "\\")
 			if strings.HasPrefix(arg, "text:") {
+				fmt.Println(arg)
 				s.Text = strings.TrimPrefix(arg, "text:")
 			}
 			if strings.HasPrefix(arg, "from:") {
