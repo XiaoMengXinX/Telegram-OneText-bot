@@ -18,7 +18,7 @@ var bot *tgbotapi.BotAPI
 func init() {
 	resp, _ := http.Get("https://raw.githubusercontent.com/lz233/OneText-Library/master/OneText-Library.json")
 	onetextJSON, _ = io.ReadAll(resp.Body)
-	bot, _ = tgbotapi.NewBotAPI(os.Getenv("BOT_TOKEN"))
+	bot, _ = tgbotapi.NewBotAPIWithClient(os.Getenv("BOT_TOKEN"), tgbotapi.APIEndpoint, &http.Client{})
 }
 
 func BotHandler(w http.ResponseWriter, r *http.Request) {
