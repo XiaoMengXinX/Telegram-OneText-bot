@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 
 	onetext "github.com/XiaoMengXinX/OneTextAPI-Go"
@@ -19,16 +18,20 @@ var bot *tgbotapi.BotAPI
 func init() {
 	resp, _ := http.Get("https://raw.githubusercontent.com/lz233/OneText-Library/master/OneText-Library.json")
 	onetextJSON, _ = io.ReadAll(resp.Body)
-	bot, _ = tgbotapi.NewBotAPIWithClient(os.Getenv("BOT_TOKEN"), tgbotapi.APIEndpoint, &http.Client{})
 }
 
 func BotHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
+	bot := &tgbotapi.BotAPI{
+		Token:  strings.ReplaceAll(r.URL.Path, "/", ""),
+		Client: &http.Client{},
+		Buffer: 100,
+	}
+	bot.SetAPIEndpoint(tgbotapi.APIEndpoint)
+
 	body, _ := io.ReadAll(r.Body)
-
 	var update tgbotapi.Update
-
 	err := json.Unmarshal(body, &update)
 	if err != nil {
 		log.Println(err)
