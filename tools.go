@@ -19,6 +19,9 @@ func setFontFace(gc *gg.Context, f *truetype.Font, point int) {
 }
 
 func strWrapper(dc *gg.Context, str string, maxTextWidth float64) (warpStr string) {
+	if str == "" {
+		return ""
+	}
 	for i := 0; i < len(str); {
 		if str[i] == '\n' {
 			i++

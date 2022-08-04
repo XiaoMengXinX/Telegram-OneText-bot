@@ -67,10 +67,10 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 				s.Text = strings.ReplaceAll(arg, "\\n", "\n")
 			}
 			if i == 1 {
-				s.By = arg
+				s.By = strings.ReplaceAll(arg, "\\n", "\n")
 			}
 			if i == 2 {
-				s.From = arg
+				s.From = strings.ReplaceAll(arg, "\\n", "\n")
 			}
 		}
 		img, err := utils.CreateOnetextImage(s)
