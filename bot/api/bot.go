@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -60,31 +59,18 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if update.Message.Command() == "custom" {
-		/*
-			text:xxxx
-			from:xxxx
-			by:xxxx
-			record_time:xxxx
-			create_time:xxxx
-		*/
 		var s onetext.Sentence
 		msgText := update.Message.CommandArguments()
 		args := strings.Split(msgText, "\n")
-		for _, arg := range args {
-			if strings.HasPrefix(arg, "text:") {
-				s.Text = fmt.Sprintf("%s", strings.TrimPrefix(arg, "text:"))
+		for i, arg := range args {
+			if i == 1 {
+				s.Text = strings.ReplaceAll(arg, "\\n", "\n")
 			}
-			if strings.HasPrefix(arg, "from:") {
-				s.From = strings.TrimPrefix(arg, "from:")
+			if i == 2 {
+				s.By = arg
 			}
-			if strings.HasPrefix(arg, "by:") {
-				s.By = strings.TrimPrefix(arg, "by:")
-			}
-			if strings.HasPrefix(arg, "record_time:") {
-				s.Time = []string{strings.TrimPrefix(arg, "record_time:")}
-			}
-			if strings.HasPrefix(arg, "create_time:") && len(s.Time) > 0 {
-				s.Time = append(s.Time, strings.TrimPrefix(arg, "create_time:"))
+			if i == 3 {
+				s.From = arg
 			}
 		}
 		img, err := utils.CreateOnetextImage(s)
