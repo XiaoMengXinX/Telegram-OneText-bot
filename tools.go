@@ -25,9 +25,9 @@ func strWrapper(dc *gg.Context, str string, maxTextWidth float64) (warpStr strin
 	strSlice := dc.WordWrap(str, maxTextWidth)
 	for i, s := range strSlice {
 		if i == 0 {
-			warpStr = s
+			str = s
 		} else {
-			warpStr = warpStr + "\n" + s
+			str = warpStr + "\n" + s
 		}
 	}
 	for i := 0; i < len(str); {
