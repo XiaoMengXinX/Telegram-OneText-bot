@@ -63,13 +63,13 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		msgText := update.Message.CommandArguments()
 		args := strings.Split(msgText, "\n")
 		for i, arg := range args {
-			if i == 1 {
+			if i == 0 {
 				s.Text = strings.ReplaceAll(arg, "\\n", "\n")
 			}
-			if i == 2 {
+			if i == 1 {
 				s.By = arg
 			}
-			if i == 3 {
+			if i == 2 {
 				s.From = arg
 			}
 		}
