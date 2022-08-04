@@ -22,6 +22,14 @@ func strWrapper(dc *gg.Context, str string, maxTextWidth float64) (warpStr strin
 	if str == "" {
 		return ""
 	}
+	strSlice := dc.WordWrap(str, maxTextWidth)
+	for i, s := range strSlice {
+		if i == 0 {
+			warpStr = s
+		} else {
+			warpStr = warpStr + "\n" + s
+		}
+	}
 	for i := 0; i < len(str); {
 		if str[i] == '\n' {
 			i++
