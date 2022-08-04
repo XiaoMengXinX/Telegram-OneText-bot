@@ -18,7 +18,10 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 	text := s.Text
 	by := s.By
 	from := s.From
-	recordTime := s.Time[0]
+	recordTime := ""
+	if len(s.Time) > 0 {
+		recordTime = s.Time[0]
+	}
 	createTime := ""
 	if len(s.Time) > 1 {
 		createTime = s.Time[1]
