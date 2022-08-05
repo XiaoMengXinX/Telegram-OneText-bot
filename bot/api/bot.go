@@ -73,7 +73,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		s := onetext.Sentence{
 			Text: update.Message.ReplyToMessage.Text,
-			By:   update.Message.ReplyToMessage.From.UserName,
+			By:   update.Message.ReplyToMessage.From.FirstName + " " + update.Message.ReplyToMessage.From.LastName,
 		}
 		img, err := utils.CreateOnetextImage(s)
 		if err != nil {
