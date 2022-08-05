@@ -24,7 +24,7 @@ Source
 
 Then you will get an onetext image like this:
 
-<img src="https://user-images.githubusercontent.com/19994286/182917358-8c3c9efe-509a-4f47-b2ff-67f55afd432b.jpg" width="60%" height="60%">
+<img src="https://user-images.githubusercontent.com/19994286/183112855-35acb999-6388-4736-94d5-2f672579c7bc.jpg" width="80%" height="80%">
 
 ## Deploy
 
