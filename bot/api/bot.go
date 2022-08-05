@@ -81,6 +81,9 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 				s.Text += "\n" + update.Message.Caption
 			}
 		}
+		if update.Message.ReplyToMessage.Sticker != nil {
+			s.Text = "[贴纸]"
+		}
 		img, err := utils.CreateOnetextImage(s, utils.FontFile, 0.9)
 		if err != nil {
 			log.Println(err)
