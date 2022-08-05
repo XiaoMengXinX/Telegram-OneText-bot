@@ -61,6 +61,36 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	if update.Message.Command() == "quote" {
+		if update.Message.ReplyToMessage == nil {
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Please reply to a message")
+			msg.ParseMode = tgbotapi.ModeMarkdownV2
+			msg.ReplyToMessageID = update.Message.MessageID
+			if _, err = bot.Send(msg); err != nil {
+				log.Println(err)
+			}
+			return
+		}
+		s := onetext.Sentence{
+			Text: update.Message.ReplyToMessage.Text,
+			By:   update.Message.ReplyToMessage.From.UserName,
+		}
+		img, err := utils.CreateOnetextImage(s)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		msg := tgbotapi.NewPhoto(update.Message.Chat.ID, tgbotapi.FileBytes{
+			Name:  "onetext.png",
+			Bytes: img,
+		})
+		msg.ReplyToMessageID = update.Message.MessageID
+		_, err = bot.Send(msg)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
 	if update.Message.Command() == "custom" {
 		if update.Message.CommandArguments() == "" {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Please input your custom text\\. Spilt arguments by newline\\.\nFor example:\n```\n/custom Some random text\nAuthor\nSource\n```")
