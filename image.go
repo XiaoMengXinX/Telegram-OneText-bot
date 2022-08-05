@@ -42,7 +42,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 	_, oneLineHeight := textContent.MeasureString("字")
 	newLineCount := float64(strings.Count(warpStr, "\n"))
 	imgTextHeight := (newLineCount + 1) * (oneLineHeight * 1.8)
-	textContent.DrawStringWrapped(strings.ReplaceAll(warpStr, " ", "\b"), 0, 0, 0, 0, 59, 1.8, gg.AlignLeft)
+	textContent.DrawStringWrapped(strings.ReplaceAll(warpStr, " ", "\b"), 0, 20, 0, 0, 59, 1.8, gg.AlignLeft)
 	height = int(imgTextHeight + oneLineHeight*1.8 + 220)
 
 	byContent := gg.NewContext(weight, 200)
@@ -51,7 +51,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 		height = height + 70
 		setFontFace(byContent, f, 48)
 		byContent.SetHexColor("#313131")
-		byContent.DrawStringWrapped(fmt.Sprintf("——\b%s", strings.ReplaceAll(by, " ", "\b")), 930, 0, 0, 0, 48, 1.8, gg.AlignRight)
+		byContent.DrawStringWrapped(fmt.Sprintf("——\b%s", strings.ReplaceAll(by, " ", "\b")), 930, 10, 0, 0, 48, 1.8, gg.AlignRight)
 	}
 
 	timeContent := gg.NewContext(weight, 200)
@@ -66,7 +66,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 		} else {
 			timeStr = fmt.Sprintf("记录于：%s", recordTime)
 		}
-		timeContent.DrawStringWrapped(timeStr, 935, 0, 0, 0, 40, 1.8, gg.AlignRight)
+		timeContent.DrawStringWrapped(timeStr, 935, 10, 0, 0, 40, 1.8, gg.AlignRight)
 	}
 
 	fromContent := gg.NewContext(weight, 200)
@@ -77,7 +77,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 		fromStr := strWrapper(fromContent, from, 860)
 		_, fromOnelineHeight := fromContent.MeasureString("字")
 		height = height + strings.Count(fromStr, "\n")*int(fromOnelineHeight*1.8) + 110
-		fromContent.DrawStringWrapped(strings.ReplaceAll(fromStr, " ", "\b"), 0, 0, 0, 0, 38, 1.8, gg.AlignLeft)
+		fromContent.DrawStringWrapped(strings.ReplaceAll(fromStr, " ", "\b"), 0, 10, 0, 0, 38, 1.8, gg.AlignLeft)
 	}
 
 	height = height + 150
@@ -92,19 +92,19 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 	setFontFace(fw, f, 55)
 	fw.SetRGB(0, 0, 0)
 	fw.DrawString("“", 110, 165)
-	fw.DrawImage(textContent.Image(), 160, 220)
+	fw.DrawImage(textContent.Image(), 160, 200)
 	lastHeight := imgTextHeight + oneLineHeight*1.8 + 220
 	fw.DrawString("”", 940, lastHeight)
 	if by != "" {
-		fw.DrawImage(byContent.Image(), 0, int(lastHeight+70))
+		fw.DrawImage(byContent.Image(), 0, int(lastHeight+60))
 		lastHeight = lastHeight + 70
 	}
 	if recordTime != "" {
-		fw.DrawImage(timeContent.Image(), 0, int(lastHeight+110))
+		fw.DrawImage(timeContent.Image(), 0, int(lastHeight+100))
 		lastHeight = lastHeight + 110
 	}
 	if from != "" {
-		fw.DrawImage(fromContent.Image(), 110, int(lastHeight+110))
+		fw.DrawImage(fromContent.Image(), 110, int(lastHeight+100))
 	}
 
 	buf := new(bytes.Buffer)
