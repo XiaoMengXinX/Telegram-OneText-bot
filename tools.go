@@ -28,7 +28,7 @@ func strWrapper(dc *gg.Context, str string, maxTextWidth float64) (warpStr strin
 		return ""
 	}
 	warpStr = walkStrSlice(dc, splitWords(str), maxTextWidth)
-	symbols := "？！，。、；：“”‘'（）《》〈〉【】『』「」﹃﹄〔〕…—～﹏￥" + "`~!@#$%^&*()_+-=\\[]{}|;'':\"\",./<>?" + " "
+	symbols := "？！，。、；：”’）》〉】』」〕…—～﹏" + `]})>!?:;,.~\|/`
 	for _, r := range symbols {
 		warpStr = strings.Replace(warpStr, fmt.Sprintf("\n%s", string(r)), fmt.Sprintf("%s\n", string(r)), -1)
 	}
