@@ -53,7 +53,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 	_, oneLineHeight := textContent.MeasureString("字")
 	newLineCount := float64(strings.Count(warpStr, "\n"))
 	imgTextHeight := (newLineCount + 1) * (oneLineHeight * 1.8)
-	drawString(textContent, strings.ReplaceAll(warpStr, " ", "\b"), 0, 20, float64(textFontSize), 1.8, gg.AlignLeft)
+	drawString(textContent, warpStr, 0, 20, float64(textFontSize), 1.8, gg.AlignLeft)
 	height = int(imgTextHeight + oneLineHeight*1.8 + 220)
 
 	byContent := gg.NewContext(weight, 200)
@@ -73,7 +73,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 		timeContent.SetHexColor("#313131")
 		timeStr := ""
 		if createTime != "" {
-			timeStr = fmt.Sprintf("记录于：%s\b创作于：%s", recordTime, createTime)
+			timeStr = fmt.Sprintf("记录于：%s 创作于：%s", recordTime, createTime)
 		} else {
 			timeStr = fmt.Sprintf("记录于：%s", recordTime)
 		}
@@ -88,7 +88,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 		fromStr := strWrapper(fromContent, from, 860)
 		_, fromOnelineHeight := fromContent.MeasureString("字")
 		height = height + strings.Count(fromStr, "\n")*int(fromOnelineHeight*1.8) + 110
-		drawString(fromContent, strings.ReplaceAll(fromStr, " ", "\b"), 0, 10, float64(fromFontSize), 1.8, gg.AlignLeft)
+		drawString(fromContent, fromStr, 0, 10, float64(fromFontSize), 1.8, gg.AlignLeft)
 	}
 
 	height = height + 150
