@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -37,6 +38,8 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+
+	fmt.Println(string(body))
 
 	if update.Message == nil {
 		return
@@ -74,12 +77,6 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		s := onetext.Sentence{
 			Text: update.Message.ReplyToMessage.Text,
 			By:   update.Message.ReplyToMessage.From.FirstName + " " + update.Message.ReplyToMessage.From.LastName,
-		}
-		if update.Message.Photo != nil {
-			s.Text = "[图片]"
-			if update.Message.Caption != "" {
-				s.Text += "\n" + update.Message.Caption
-			}
 		}
 		img, err := utils.CreateOnetextImage(s, utils.FontFile, 0.9)
 		if err != nil {
