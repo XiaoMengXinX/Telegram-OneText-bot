@@ -109,6 +109,8 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 	if by != "" {
 		fw.DrawImage(byContent.Image(), 0, int(lastHeight+60))
 		lastHeight = lastHeight + byHeight
+	} else {
+		lastHeight = lastHeight - 70
 	}
 	if recordTime != "" {
 		fw.DrawImage(timeContent.Image(), 0, int(lastHeight+100))
