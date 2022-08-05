@@ -53,11 +53,16 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 
 	byContent := gg.NewContext(weight, 200)
 	byContent.SetHexColor("#FFFFFF")
+	var byHeight float64
 	if by != "" {
 		height = height + 70
 		setFontFace(byContent, f, byFontSize)
 		byContent.SetHexColor("#313131")
-		drawString(byContent, fmt.Sprintf("—— %s", by), 930, 10, float64(byFontSize), 1.8, gg.AlignRight)
+		byStr := strWrapper(byContent, fmt.Sprintf("—— %s", by), 860)
+		_, byOnelineHeight := byContent.MeasureString("字")
+		byHeight = float64(strings.Count(byStr, "\n"))*byOnelineHeight*1.8 + 70
+		height = height + int(byHeight)
+		drawString(byContent, byStr, 930, 10, float64(byFontSize), 1.8, gg.AlignRight)
 	}
 
 	timeContent := gg.NewContext(weight, 200)
@@ -82,11 +87,11 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 		fromContent.SetHexColor("#313131")
 		fromStr := strWrapper(fromContent, from, 860)
 		_, fromOnelineHeight := fromContent.MeasureString("字")
-		height = height + strings.Count(fromStr, "\n")*int(fromOnelineHeight*1.8) + 110
+		height = height + int(float64(strings.Count(fromStr, "\n"))*fromOnelineHeight*1.8) + 110
 		drawString(fromContent, fromStr, 0, 10, float64(fromFontSize), 1.8, gg.AlignLeft)
 	}
 
-	height = height + 150
+	height = height + 80
 
 	fw := gg.NewContext(weight, height)
 	fw.SetHexColor("#FFFFFF")
@@ -103,7 +108,7 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 	fw.DrawString("”", 940, lastHeight)
 	if by != "" {
 		fw.DrawImage(byContent.Image(), 0, int(lastHeight+60))
-		lastHeight = lastHeight + 70
+		lastHeight = lastHeight + byHeight
 	}
 	if recordTime != "" {
 		fw.DrawImage(timeContent.Image(), 0, int(lastHeight+100))
