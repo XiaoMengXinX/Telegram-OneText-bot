@@ -15,6 +15,17 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 	weight := 1080
 	height := 0
 
+	// default font size is for canger.ttf
+	var textFontSize = 59
+	var byFontSize = 48
+	var fromFontSize = 38
+	var timeFontSize = 40
+
+	textFontSize = int(float64(textFontSize) * 0.9)
+	byFontSize = int(float64(byFontSize) * 0.9)
+	fromFontSize = int(float64(fromFontSize) * 0.9)
+	timeFontSize = int(float64(timeFontSize) * 0.9)
+
 	text := s.Text
 	by := s.By
 	from := s.From
@@ -34,7 +45,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 
 	textContent := gg.NewContext(1080, 3000)
 	textContent.SetHexColor("#FFFFFF")
-	setFontFace(textContent, f, 59)
+	setFontFace(textContent, f, textFontSize)
 	textContent.SetHexColor("#000000")
 
 	warpStr := strWrapper(textContent, text, 780)
@@ -42,23 +53,23 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 	_, oneLineHeight := textContent.MeasureString("字")
 	newLineCount := float64(strings.Count(warpStr, "\n"))
 	imgTextHeight := (newLineCount + 1) * (oneLineHeight * 1.8)
-	textContent.DrawStringWrapped(strings.ReplaceAll(warpStr, " ", "\b"), 0, 20, 0, 0, 59, 1.8, gg.AlignLeft)
+	drawString(textContent, strings.ReplaceAll(warpStr, " ", "\b"), 0, 20, float64(textFontSize), 1.8, gg.AlignLeft)
 	height = int(imgTextHeight + oneLineHeight*1.8 + 220)
 
 	byContent := gg.NewContext(weight, 200)
 	byContent.SetHexColor("#FFFFFF")
 	if by != "" {
 		height = height + 70
-		setFontFace(byContent, f, 48)
+		setFontFace(byContent, f, byFontSize)
 		byContent.SetHexColor("#313131")
-		byContent.DrawStringWrapped(fmt.Sprintf("——\b%s", strings.ReplaceAll(by, " ", "\b")), 930, 10, 0, 0, 48, 1.8, gg.AlignRight)
+		drawString(byContent, fmt.Sprintf("—— %s", by), 930, 10, float64(byFontSize), 1.8, gg.AlignRight)
 	}
 
 	timeContent := gg.NewContext(weight, 200)
 	timeContent.SetHexColor("#FFFFFF")
 	if recordTime != "" {
 		height = height + 110
-		setFontFace(timeContent, f, 40)
+		setFontFace(timeContent, f, timeFontSize)
 		timeContent.SetHexColor("#313131")
 		timeStr := ""
 		if createTime != "" {
@@ -66,18 +77,18 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 		} else {
 			timeStr = fmt.Sprintf("记录于：%s", recordTime)
 		}
-		timeContent.DrawStringWrapped(timeStr, 935, 10, 0, 0, 40, 1.8, gg.AlignRight)
+		drawString(timeContent, timeStr, 935, 10, float64(timeFontSize), 1.8, gg.AlignRight)
 	}
 
 	fromContent := gg.NewContext(weight, 200)
 	fromContent.SetHexColor("#FFFFFF")
 	if from != "" {
-		setFontFace(fromContent, f, 38)
+		setFontFace(fromContent, f, fromFontSize)
 		fromContent.SetHexColor("#313131")
 		fromStr := strWrapper(fromContent, from, 860)
 		_, fromOnelineHeight := fromContent.MeasureString("字")
 		height = height + strings.Count(fromStr, "\n")*int(fromOnelineHeight*1.8) + 110
-		fromContent.DrawStringWrapped(strings.ReplaceAll(fromStr, " ", "\b"), 0, 10, 0, 0, 38, 1.8, gg.AlignLeft)
+		drawString(fromContent, strings.ReplaceAll(fromStr, " ", "\b"), 0, 10, float64(fromFontSize), 1.8, gg.AlignLeft)
 	}
 
 	height = height + 150

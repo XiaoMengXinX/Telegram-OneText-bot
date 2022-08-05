@@ -23,6 +23,30 @@ func setFontFace(gc *gg.Context, f *truetype.Font, point int) {
 	reflect.NewAt(v.Type(), unsafe.Pointer(v.UnsafeAddr())).Elem().Set(reflect.ValueOf(float64(point * 72 / 96)))
 }
 
+func drawString(dc *gg.Context, s string, x, y, width, lineSpacing float64, align gg.Align) {
+	lines := strings.Split(s, "\n")
+	var ax, ay float64
+
+	h := float64(len(lines)) * dc.FontHeight() * lineSpacing
+	h -= (lineSpacing - 1) * dc.FontHeight()
+
+	switch align {
+	case gg.AlignLeft:
+		ax = 0
+	case gg.AlignCenter:
+		ax = 0.5
+		x += width / 2
+	case gg.AlignRight:
+		ax = 1
+		x += width
+	}
+	ay = 1
+	for _, line := range lines {
+		dc.DrawStringAnchored(line, x, y, ax, ay)
+		y += dc.FontHeight() * lineSpacing
+	}
+}
+
 func strWrapper(dc *gg.Context, str string, maxTextWidth float64) (warpStr string) {
 	if str == "" {
 		return ""

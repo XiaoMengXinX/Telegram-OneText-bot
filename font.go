@@ -4,5 +4,5 @@ import (
 	_ "embed"
 )
 
-//go:embed canger.ttf
+//go:embed fonts/LXGWWenKai-Regular.ttf
 var fontFile []byte
