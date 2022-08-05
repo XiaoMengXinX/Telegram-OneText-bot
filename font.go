@@ -5,4 +5,4 @@ import (
 )
 
 //go:embed fonts/LXGWWenKai-Regular.ttf
-var fontFile []byte
+var FontFile []byte

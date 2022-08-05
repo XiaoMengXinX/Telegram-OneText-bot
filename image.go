@@ -11,20 +11,15 @@ import (
 	"github.com/golang/freetype/truetype"
 )
 
-func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
+func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]byte, error) {
 	weight := 1080
 	height := 0
 
 	// default font size is for canger.ttf
-	var textFontSize = 59
-	var byFontSize = 48
-	var fromFontSize = 38
-	var timeFontSize = 40
-
-	textFontSize = int(float64(textFontSize) * 0.9)
-	byFontSize = int(float64(byFontSize) * 0.9)
-	fromFontSize = int(float64(fromFontSize) * 0.9)
-	timeFontSize = int(float64(timeFontSize) * 0.9)
+	var textFontSize = int(59 * fontScale)
+	var byFontSize = int(48 * fontScale)
+	var fromFontSize = int(38 * fontScale)
+	var timeFontSize = int(40 * fontScale)
 
 	text := s.Text
 	by := s.By
@@ -38,7 +33,7 @@ func CreateOnetextImage(s onetext.Sentence) ([]byte, error) {
 		createTime = s.Time[1]
 	}
 
-	f, err := truetype.Parse(fontFile)
+	f, err := truetype.Parse(font)
 	if err != nil {
 		return nil, err
 	}

@@ -45,7 +45,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		o := onetext.New()
 		o.ReadBytes(onetextJSON)
 		s := o.Random()
-		img, err := utils.CreateOnetextImage(s)
+		img, err := utils.CreateOnetextImage(s, utils.FontFile, 0.9)
 		if err != nil {
 			log.Println(err)
 			return
@@ -75,7 +75,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			Text: update.Message.ReplyToMessage.Text,
 			By:   update.Message.ReplyToMessage.From.FirstName + " " + update.Message.ReplyToMessage.From.LastName,
 		}
-		img, err := utils.CreateOnetextImage(s)
+		img, err := utils.CreateOnetextImage(s, utils.FontFile, 0.9)
 		if err != nil {
 			log.Println(err)
 			return
@@ -115,7 +115,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 				s.From = strings.ReplaceAll(arg, "\\n", "\n")
 			}
 		}
-		img, err := utils.CreateOnetextImage(s)
+		img, err := utils.CreateOnetextImage(s, utils.FontFile, 0.9)
 		if err != nil {
 			log.Println(err)
 			return
