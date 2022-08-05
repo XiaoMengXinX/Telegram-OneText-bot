@@ -10,6 +10,8 @@ On telegram group or private chat, send a special command to the bot:
 
 `/onetext` - Get an onetext image
 
+`/quote` - Reply to a message and quote it
+
 `/custom` - Create an onetext image with your own text
 
 For example, send the following message to the bot:
