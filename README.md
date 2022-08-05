@@ -2,6 +2,8 @@
 
 A telegram bot to create onetext image
 
+Embed font: [LxgwWenKai](https://github.com/lxgw/LxgwWenKai)
+
 ## Usage
 
 On telegram group or private chat, send a special command to the bot:
