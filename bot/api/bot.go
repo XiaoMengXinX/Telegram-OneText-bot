@@ -77,8 +77,8 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if len(update.Message.ReplyToMessage.Photo) != 0 {
 			s.Text = "[图片]"
-			if update.Message.Caption != "" {
-				s.Text += "\n" + update.Message.Caption
+			if update.Message.ReplyToMessage.Caption != "" {
+				s.Text += "\n" + update.Message.ReplyToMessage.Caption
 			}
 		}
 		if update.Message.ReplyToMessage.Sticker != nil {
