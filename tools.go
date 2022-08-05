@@ -2,6 +2,7 @@ package utils
 
 import (
 	_ "embed"
+	"fmt"
 	"reflect"
 	"regexp"
 	"strings"
@@ -12,7 +13,7 @@ import (
 	"github.com/golang/freetype/truetype"
 )
 
-var symbolsReg = "^[\u4e00-\u9fa5|。|？|！|，|、|；|：|“|”|‘|’|（|）|《|》|〈|〉|【|】|『|』|「|」|﹃|﹄|〔|〕|…|—|～|﹏|￥]$"
+var symbolsReg = regexp.MustCompile("^[a-zA-Z|{P}| ]$")
 
 func setFontFace(gc *gg.Context, f *truetype.Font, point int) {
 	gc.SetFontFace(truetype.NewFace(f, &truetype.Options{
@@ -26,9 +27,12 @@ func strWrapper(dc *gg.Context, str string, maxTextWidth float64) (warpStr strin
 	if str == "" {
 		return ""
 	}
-	warpStr = walkStrSlice(dc, splitHanAndASCII(str), maxTextWidth)
-	punctuationReplacer := strings.NewReplacer("\n。", "。\n", "\n，", "，\n", "\n！", "！\n", "\n？", "？\n", "\n\"", "\"\n", "\n“", "“\n", "\n”", "”\n")
-	warpStr = strings.ReplaceAll(punctuationReplacer.Replace(warpStr), "\n\n", "\n")
+	warpStr = walkStrSlice(dc, splitWords(str), maxTextWidth)
+	symbols := "？！，。、；：“”‘'（）《》〈〉【】『』「」﹃﹄〔〕…—～﹏￥" + "`~!@#$%^&*()_+-=\\[]{}|;'':\"\",./<>?" + " "
+	for _, r := range symbols {
+		warpStr = strings.Replace(warpStr, fmt.Sprintf("\n%s", string(r)), fmt.Sprintf("%s\n", string(r)), -1)
+	}
+	warpStr = strings.ReplaceAll(warpStr, "\n\n", "\n")
 	if warpStr[len(warpStr)-1] == '\n' {
 		warpStr = warpStr[:len(warpStr)-1]
 	}
@@ -56,11 +60,7 @@ func truncateText(dc *gg.Context, textSlice []string, count int, maxTextWidth fl
 		if r == "\n" {
 			break
 		}
-		if regexp.MustCompile(symbolsReg).MatchString(r) {
-			tmpStr = tmpStr + r
-		} else {
-			tmpStr = tmpStr + " " + r
-		}
+		tmpStr = tmpStr + r
 		w, _ := dc.MeasureString(tmpStr)
 		if w > maxTextWidth {
 			if len(tmpStr) <= 1 {
@@ -69,34 +69,25 @@ func truncateText(dc *gg.Context, textSlice []string, count int, maxTextWidth fl
 				break
 			}
 		} else {
-			if regexp.MustCompile(symbolsReg).MatchString(r) {
-				result = append(result, r)
-			} else {
-				result = append(result, r+" ")
-			}
+			result = append(result, r)
 		}
 	}
 	return result
 }
 
-func splitHanAndASCII(str string) []string {
+func splitWords(str string) []string {
 	var result []string
 	var tmpStr string
 	for _, r := range str {
-		if regexp.MustCompile(symbolsReg).MatchString(string(r)) {
+		if !symbolsReg.MatchString(string(r)) {
 			if tmpStr != "" {
 				result = append(result, tmpStr)
 				tmpStr = ""
 			}
 			result = append(result, string(r))
 		} else {
-			if r == '\n' {
-				result = append(result, tmpStr, "\n")
-				tmpStr = ""
-				continue
-			}
 			if unicode.IsSpace(r) {
-				result = append(result, tmpStr)
+				result = append(result, tmpStr+string(r))
 				tmpStr = ""
 			} else {
 				tmpStr = tmpStr + string(r)
