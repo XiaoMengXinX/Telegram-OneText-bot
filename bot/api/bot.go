@@ -75,6 +75,12 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			Text: update.Message.ReplyToMessage.Text,
 			By:   update.Message.ReplyToMessage.From.FirstName + " " + update.Message.ReplyToMessage.From.LastName,
 		}
+		if len(update.Message.Photo) != 0 {
+			s.Text = "[图片]"
+			if update.Message.Caption != "" {
+				s.Text += "\n" + update.Message.Caption
+			}
+		}
 		img, err := utils.CreateOnetextImage(s, utils.FontFile, 0.9)
 		if err != nil {
 			log.Println(err)
