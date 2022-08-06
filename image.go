@@ -103,7 +103,7 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 	setFontFace(fw, f, 55)
 	fw.SetRGB(0, 0, 0)
 	fw.DrawString("“", 110, 165)
-	fw.DrawImage(textContent.Image(), 160, 200)
+	fw.DrawImage(textContent.Image(), 160, int(200*fontScale))
 	lastHeight := imgTextHeight + oneLineHeight*1.8 + 220
 	fw.DrawString("”", 940, lastHeight)
 	if by != "" {
