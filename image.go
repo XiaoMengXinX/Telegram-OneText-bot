@@ -11,15 +11,15 @@ import (
 	"github.com/golang/freetype/truetype"
 )
 
-func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]byte, error) {
+func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 	weight := 1080
 	height := 0
 
 	// default font size is for canger.ttf
-	var textFontSize = int(59 * fontScale)
-	var byFontSize = int(48 * fontScale)
-	var fromFontSize = int(38 * fontScale)
-	var timeFontSize = int(40 * fontScale)
+	var textFontSize = int(59 * font.FontScale)
+	var byFontSize = int(48 * font.FontScale)
+	var fromFontSize = int(38 * font.FontScale)
+	var timeFontSize = int(40 * font.FontScale)
 
 	text := s.Text
 	by := s.By
@@ -33,7 +33,7 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 		createTime = s.Time[1]
 	}
 
-	f, err := truetype.Parse(font)
+	f, err := truetype.Parse(font.FontFile)
 	if err != nil {
 		return nil, err
 	}
@@ -49,18 +49,18 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 	newLineCount := float64(strings.Count(warpStr, "\n"))
 	imgTextHeight := (newLineCount + 1) * (oneLineHeight * 1.8)
 	drawString(textContent, warpStr, 0, 20, float64(textFontSize), 1.8, gg.AlignLeft)
-	height = int(imgTextHeight + oneLineHeight*1.8 + 220)
+	height = int(imgTextHeight + oneLineHeight*1.8 + 165*font.FontScale + 55)
 
 	byContent := gg.NewContext(weight, 200)
 	byContent.SetHexColor("#FFFFFF")
 	var byHeight float64
 	if by != "" {
-		height = height + 70
+		height = height + int(70*font.FontScale)
 		setFontFace(byContent, f, byFontSize)
 		byContent.SetHexColor("#313131")
 		byStr := strWrapper(byContent, fmt.Sprintf("—— %s", by), 860)
 		_, byOnelineHeight := byContent.MeasureString("字")
-		byHeight = float64(strings.Count(byStr, "\n"))*byOnelineHeight*1.8 + 70
+		byHeight = float64(strings.Count(byStr, "\n"))*byOnelineHeight*1.8 + 70*font.FontScale
 		height = height + int(byHeight)
 		drawString(byContent, byStr, 930, 10, float64(byFontSize), 1.8, gg.AlignRight)
 	}
@@ -68,7 +68,7 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 	timeContent := gg.NewContext(weight, 200)
 	timeContent.SetHexColor("#FFFFFF")
 	if recordTime != "" {
-		height = height + 110
+		height = height + int(110*font.FontScale)
 		setFontFace(timeContent, f, timeFontSize)
 		timeContent.SetHexColor("#313131")
 		timeStr := ""
@@ -87,11 +87,11 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 		fromContent.SetHexColor("#313131")
 		fromStr := strWrapper(fromContent, from, 860)
 		_, fromOnelineHeight := fromContent.MeasureString("字")
-		height = height + int(float64(strings.Count(fromStr, "\n"))*fromOnelineHeight*1.8) + 110
+		height = height + int(float64(strings.Count(fromStr, "\n"))*fromOnelineHeight*1.8) + int(25*font.FontScale)
 		drawString(fromContent, fromStr, 0, 10, float64(fromFontSize), 1.8, gg.AlignLeft)
 	}
 
-	height = height + 80
+	height = height + 55 + int(110*font.FontScale)
 
 	fw := gg.NewContext(weight, height)
 	fw.SetHexColor("#FFFFFF")
@@ -100,24 +100,26 @@ func CreateOnetextImage(s onetext.Sentence, font []byte, fontScale float64) ([]b
 	fw.SetLineWidth(4)
 	fw.SetHexColor("#e3e3e3")
 	fw.StrokePreserve()
-	setFontFace(fw, f, 55)
+	setFontFace(fw, f, textFontSize)
 	fw.SetRGB(0, 0, 0)
-	fw.DrawString("“", 110, 165)
-	fw.DrawImage(textContent.Image(), 160, int(200*fontScale))
-	lastHeight := imgTextHeight + oneLineHeight*1.8 + 220
-	fw.DrawString("”", 940, lastHeight)
+	lastY := 55 + 110*font.FontScale
+	fw.DrawString("“", 110, lastY)
+	fw.DrawImage(textContent.Image(), 160, int(lastY+55*font.FontScale)-20)
+	lastY = imgTextHeight + oneLineHeight*1.8 + lastY + 55*font.FontScale
+	fw.DrawString("”", 940, lastY)
 	if by != "" {
-		fw.DrawImage(byContent.Image(), 0, int(lastHeight+60))
-		lastHeight = lastHeight + byHeight
-	} else {
-		lastHeight = lastHeight - 70
+		lastY = lastY + 70*font.FontScale
+		fw.DrawImage(byContent.Image(), 0, int(lastY)-10)
+		lastY = lastY + byHeight
 	}
 	if recordTime != "" {
-		fw.DrawImage(timeContent.Image(), 0, int(lastHeight+100))
-		lastHeight = lastHeight + 110
+		lastY = lastY + 40*font.FontScale
+		fw.DrawImage(timeContent.Image(), 0, int(lastY)-10)
+		lastY = lastY + 70*font.FontScale
 	}
 	if from != "" {
-		fw.DrawImage(fromContent.Image(), 110, int(lastHeight+100))
+		lastY = lastY + 40*font.FontScale
+		fw.DrawImage(fromContent.Image(), 110, int(lastY)-10)
 	}
 
 	buf := new(bytes.Buffer)
