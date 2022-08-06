@@ -4,5 +4,15 @@ import (
 	_ "embed"
 )
 
+type FontConfig struct {
+	FontFile  []byte
+	FontScale float64
+}
+
 //go:embed fonts/LXGWWenKai-Regular.ttf
-var FontFile []byte
+var fontFile []byte
+
+var BuiltinFont = FontConfig{
+	FontFile:  fontFile,
+	FontScale: 0.9,
+}
