@@ -9,7 +9,7 @@ type FontConfig struct {
 	FontScale float64
 }
 
-//go:embed fonts/LXGWWenKai-Regular.ttf
+//go:embed fonts/LXGWWenKaiTC-Regular.ttf
 var fontFile []byte
 
 var BuiltinFont = FontConfig{
