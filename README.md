@@ -8,7 +8,7 @@ Built-in font: [LxgwWenKai](https://github.com/lxgw/LxgwWenKai)
 
 ## Usage
 
-On telegram group or private chat, send a special command to the bot:
+On telegram group or private chat, send the listed command to the bot:
 
 `/onetext` - Get an onetext image
 
