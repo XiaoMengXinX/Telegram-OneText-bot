@@ -1,6 +1,8 @@
 # Telegram OneText Bot
 
-A telegram bot to create onetext image
+A telegram bot to create onetext image.
+
+Demo: [OneText Bot](https://t.me/one_text_bot)
 
 Built-in font: [LxgwWenKai](https://github.com/lxgw/LxgwWenKai)
 
@@ -27,6 +29,8 @@ Then you will get an onetext image like this:
 <img src="https://user-images.githubusercontent.com/19994286/183112855-35acb999-6388-4736-94d5-2f672579c7bc.jpg" width="80%" height="80%">
 
 ## Deploy
+
+**Notice: The Root Directory need to be set to "bot".**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FXiaoMengXinX%2FTelegram-OneText-bot)
 
