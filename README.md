@@ -2,7 +2,7 @@
 
 A telegram bot to create onetext image
 
-Embed font: [LxgwWenKai](https://github.com/lxgw/LxgwWenKai)
+Built-in font: [LxgwWenKai](https://github.com/lxgw/LxgwWenKai)
 
 ## Usage
 
