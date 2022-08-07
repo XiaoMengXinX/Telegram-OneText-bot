@@ -44,7 +44,6 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 	textContent.SetHexColor("#000000")
 
 	warpStr := strWrapper(textContent, text, 780)
-
 	_, oneLineHeight := textContent.MeasureString("字")
 	newLineCount := float64(strings.Count(warpStr, "\n"))
 	imgTextHeight := (newLineCount + 1) * (oneLineHeight * 1.8)
@@ -68,7 +67,6 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 	timeContent := gg.NewContext(weight, 200)
 	timeContent.SetHexColor("#FFFFFF")
 	if recordTime != "" {
-		height = height + int(110*font.FontScale)
 		setFontFace(timeContent, f, timeFontSize)
 		timeContent.SetHexColor("#313131")
 		timeStr := ""
@@ -77,6 +75,8 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 		} else {
 			timeStr = fmt.Sprintf("记录于：%s", recordTime)
 		}
+		timeHeight := 40*font.FontScale + 70*font.FontScale
+		height = height + int(timeHeight)
 		drawString(timeContent, timeStr, 935, 10, float64(timeFontSize), 1.8, gg.AlignRight)
 	}
 
@@ -87,11 +87,12 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 		fromContent.SetHexColor("#313131")
 		fromStr := strWrapper(fromContent, from, 860)
 		_, fromOnelineHeight := fromContent.MeasureString("字")
-		height = height + int(float64(strings.Count(fromStr, "\n"))*fromOnelineHeight*1.8) + int(25*font.FontScale)
+		fromHeight := float64(strings.Count(fromStr, "\n"))*fromOnelineHeight*1.8 + 25*font.FontScale + 70*font.FontScale
+		height = height + int(fromHeight)
 		drawString(fromContent, fromStr, 0, 10, float64(fromFontSize), 1.8, gg.AlignLeft)
 	}
 
-	height = height + 55 + int(110*font.FontScale)
+	height = height + 55 + int(40*font.FontScale)
 
 	fw := gg.NewContext(weight, height)
 	fw.SetHexColor("#FFFFFF")
