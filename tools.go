@@ -2,7 +2,6 @@ package utils
 
 import (
 	_ "embed"
-	"fmt"
 	"reflect"
 	"regexp"
 	"strings"
@@ -14,6 +13,7 @@ import (
 )
 
 var symbolsReg = regexp.MustCompile("^[a-zA-Z|{P}| ]$")
+var symbols = "？！，。、；：”’）》〉】』」〕…—～﹏" + `]})>!?:;,.~\|/`
 
 func setFontFace(gc *gg.Context, f *truetype.Font, point int) {
 	gc.SetFontFace(truetype.NewFace(f, &truetype.Options{
@@ -52,10 +52,6 @@ func strWrapper(dc *gg.Context, str string, maxTextWidth float64) (warpStr strin
 		return ""
 	}
 	warpStr = walkStrSlice(dc, splitWords(str), maxTextWidth)
-	symbols := "？！，。、；：”’）》〉】』」〕…—～﹏" + `]})>!?:;,.~\|/`
-	for _, r := range symbols {
-		warpStr = strings.Replace(warpStr, fmt.Sprintf("\n%s", string(r)), fmt.Sprintf("%s\n", string(r)), -1)
-	}
 	warpStr = strings.ReplaceAll(warpStr, "\n\n", "\n")
 	if warpStr[len(warpStr)-1] == '\n' {
 		warpStr = warpStr[:len(warpStr)-1]
@@ -67,7 +63,7 @@ func walkStrSlice(dc *gg.Context, s []string, maxTextWidth float64) string {
 	var result string
 	for i := 0; i < len(s); {
 		tmp := truncateText(dc, s, i, maxTextWidth)
-		if tmp != nil {
+		if len(tmp) != 0 {
 			result = result + strings.Join(tmp, "") + "\n"
 			i = i + len(tmp)
 		} else {
@@ -87,11 +83,10 @@ func truncateText(dc *gg.Context, textSlice []string, count int, maxTextWidth fl
 		tmpStr = tmpStr + r
 		w, _ := dc.MeasureString(tmpStr)
 		if w > maxTextWidth {
-			if len(tmpStr) <= 1 {
-				return nil
-			} else {
-				break
+			if strings.Contains(symbols, r) {
+				result = append(result, r)
 			}
+			break
 		} else {
 			result = append(result, r)
 		}
