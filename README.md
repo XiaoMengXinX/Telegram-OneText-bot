@@ -2,6 +2,8 @@
 
 A telegram bot to create onetext image.
 
+Thanks to [OneText_For_Android](https://github.com/lz233/OneText_For_Android)
+
 Demo: [OneText Bot](https://t.me/one_text_bot)
 
 Built-in font: [LxgwWenKai](https://github.com/lxgw/LxgwWenKai)
