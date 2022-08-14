@@ -75,8 +75,8 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			Text: update.Message.ReplyToMessage.Text,
 			By:   update.Message.ReplyToMessage.From.FirstName + " " + update.Message.ReplyToMessage.From.LastName,
 		}
-		if update.Message.ReplyToMessage.ForwardFrom != nil {
-			s.By = update.Message.ReplyToMessage.ForwardFrom.FirstName + " " + update.Message.ReplyToMessage.ForwardFrom.LastName
+		if update.Message.ReplyToMessage.ForwardSenderName != "" {
+			s.By = update.Message.ReplyToMessage.ForwardSenderName
 		}
 		if len(update.Message.ReplyToMessage.Photo) != 0 {
 			s.Text = "[图片]"
