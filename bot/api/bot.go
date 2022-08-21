@@ -44,19 +44,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 	if update.Message.Command() == "onetext" {
 		o := onetext.New()
 		o.ReadBytes(onetextJSON)
-		s := o.Random()
-		img, err := utils.CreateOnetextImage(s, utils.BuiltinFont)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		msg := tgbotapi.NewPhoto(update.Message.Chat.ID, tgbotapi.FileBytes{
-			Name:  "onetext.png",
-			Bytes: img,
-		})
-		msg.ReplyToMessageID = update.Message.MessageID
-		_, err = bot.Send(msg)
-		if err != nil {
+		if err := sendOnetextImg(o.Random(), update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}
@@ -87,18 +75,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		if update.Message.ReplyToMessage.Sticker != nil {
 			s.Text = "[贴纸]"
 		}
-		img, err := utils.CreateOnetextImage(s, utils.BuiltinFont)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		msg := tgbotapi.NewPhoto(update.Message.Chat.ID, tgbotapi.FileBytes{
-			Name:  "onetext.png",
-			Bytes: img,
-		})
-		msg.ReplyToMessageID = update.Message.MessageID
-		_, err = bot.Send(msg)
-		if err != nil {
+		if err := sendOnetextImg(s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}
@@ -127,20 +104,23 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 				s.From = strings.ReplaceAll(arg, "\\n", "\n")
 			}
 		}
-		img, err := utils.CreateOnetextImage(s, utils.BuiltinFont)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		msg := tgbotapi.NewPhoto(update.Message.Chat.ID, tgbotapi.FileBytes{
-			Name:  "onetext.png",
-			Bytes: img,
-		})
-		msg.ReplyToMessageID = update.Message.MessageID
-		_, err = bot.Send(msg)
-		if err != nil {
+		if err := sendOnetextImg(s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}
 	}
+}
+
+func sendOnetextImg(s onetext.Sentence, chatID int64, messageID int) (err error) {
+	img, err := utils.CreateOnetextImage(s, utils.BuiltinFont)
+	if err != nil {
+		return err
+	}
+	msg := tgbotapi.NewPhoto(chatID, tgbotapi.FileBytes{
+		Name:  "onetext.jpg",
+		Bytes: img,
+	})
+	msg.ReplyToMessageID = messageID
+	_, err = bot.Send(msg)
+	return err
 }
