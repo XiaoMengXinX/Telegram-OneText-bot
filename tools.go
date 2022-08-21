@@ -9,16 +9,18 @@ import (
 	"unsafe"
 
 	"github.com/fogleman/gg"
-	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font/opentype"
 )
 
 var symbolsReg = regexp.MustCompile("^[a-zA-Z|{P}| ]$")
 var symbols = "？！，。、；：”’）》〉】』」〕…—～﹏" + `]})>!?:;,.~\|/`
 
-func setFontFace(gc *gg.Context, f *truetype.Font, point int) {
-	gc.SetFontFace(truetype.NewFace(f, &truetype.Options{
+func setFontFace(gc *gg.Context, f *opentype.Font, point int) {
+	face, _ := opentype.NewFace(f, &opentype.FaceOptions{
 		Size: float64(point),
-	}))
+		DPI:  72,
+	})
+	gc.SetFontFace(face)
 	v := reflect.ValueOf(gc).Elem().FieldByName("fontHeight")
 	reflect.NewAt(v.Type(), unsafe.Pointer(v.UnsafeAddr())).Elem().Set(reflect.ValueOf(float64(point * 72 / 96)))
 }

@@ -3,12 +3,12 @@ package utils
 import (
 	"bytes"
 	"fmt"
-	"image/png"
+	"image/jpeg"
 	"strings"
 
 	onetext "github.com/XiaoMengXinX/OneTextAPI-Go"
 	"github.com/fogleman/gg"
-	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font/opentype"
 )
 
 func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
@@ -33,7 +33,7 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 		createTime = s.Time[1]
 	}
 
-	f, err := truetype.Parse(font.FontFile)
+	f, err := opentype.Parse(font.FontFile)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 	}
 
 	buf := new(bytes.Buffer)
-	err = png.Encode(buf, fw.Image())
+	err = jpeg.Encode(buf, fw.Image(), nil)
 	if err != nil {
 		return nil, err
 	}
