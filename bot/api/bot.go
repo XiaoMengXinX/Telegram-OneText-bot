@@ -2,9 +2,12 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 
 	onetext "github.com/XiaoMengXinX/OneTextAPI-Go"
@@ -14,6 +17,11 @@ import (
 
 var onetextJSON []byte
 var bot *tgbotapi.BotAPI
+
+type ShortURLResp struct {
+	Token string `json:"token"`
+	Error string `json:"error"`
+}
 
 func init() {
 	resp, _ := http.Get("https://raw.githubusercontent.com/lz233/OneText-Library/master/OneText-Library.json")
@@ -104,7 +112,12 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 				s.From = strings.ReplaceAll(arg, "\\n", "\n")
 			}
 			if i == 3 {
-				s.Uri = strings.ReplaceAll(arg, "\\n", "\n")
+				url, err := shortURL(strings.ReplaceAll(arg, "\\n", "\n"))
+				if err != nil {
+					log.Println(err)
+				} else {
+					s.Uri = url
+				}
 			}
 		}
 		if err := sendOnetextImg(s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
@@ -126,4 +139,19 @@ func sendOnetextImg(s onetext.Sentence, chatID int64, messageID int) (err error)
 	msg.ReplyToMessageID = messageID
 	_, err = bot.Send(msg)
 	return err
+}
+
+func shortURL(u string) (short string, err error) {
+	resp, _ := http.PostForm("https://xve.me/api/url", url.Values{"url": {u}})
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	var respData ShortURLResp
+	if err = json.Unmarshal(body, &respData); err != nil {
+		return
+	}
+	if respData.Error != "" {
+		return "", errors.New(respData.Error)
+	}
+	short = fmt.Sprintf("https://xve.me/%s", respData.Token)
+	return
 }
