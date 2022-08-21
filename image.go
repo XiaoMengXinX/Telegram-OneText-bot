@@ -3,11 +3,13 @@ package utils
 import (
 	"bytes"
 	"fmt"
+	"image"
 	"image/jpeg"
 	"strings"
 
 	onetext "github.com/XiaoMengXinX/OneTextAPI-Go"
 	"github.com/fogleman/gg"
+	"github.com/skip2/go-qrcode"
 	"golang.org/x/image/font/opentype"
 )
 
@@ -20,6 +22,7 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 	var byFontSize = int(48 * font.FontScale)
 	var fromFontSize = int(38 * font.FontScale)
 	var timeFontSize = int(40 * font.FontScale)
+	var qrFontSize = int(30 * font.FontScale)
 
 	text := s.Text
 	by := s.By
@@ -82,19 +85,28 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 
 	fromContent := gg.NewContext(weight, 200)
 	fromContent.SetHexColor("#FFFFFF")
+	var fromHeight float64
 	if from != "" {
 		setFontFace(fromContent, f, fromFontSize)
 		fromContent.SetHexColor("#313131")
 		fromStr := strWrapper(fromContent, from, 860)
 		_, fromOnelineHeight := fromContent.MeasureString("字")
-		fromHeight := float64(strings.Count(fromStr, "\n"))*fromOnelineHeight*1.8 + 25*font.FontScale + 70*font.FontScale
+		fromHeight = float64(strings.Count(fromStr, "\n"))*fromOnelineHeight*1.8 + 25*font.FontScale + 70*font.FontScale
 		height = height + int(fromHeight)
 		drawString(fromContent, fromStr, 0, 10, float64(fromFontSize), 1.8, gg.AlignLeft)
 	}
 
+	var qrCodeImg image.Image
+	var qrHeight int
+	if s.Uri != "" {
+		qrHeight = 50
+		qrCode, _ := qrcode.New(s.Uri, qrcode.Medium)
+		qrCodeImg = qrCode.Image(50)
+	}
+
 	height = height + 55 + int(40*font.FontScale)
 
-	fw := gg.NewContext(weight, height)
+	fw := gg.NewContext(weight, height+qrHeight)
 	fw.SetHexColor("#FFFFFF")
 	fw.Clear()
 	fw.DrawRoundedRectangle(55, 55, float64(weight-55*2), float64(height-55*2), 10)
@@ -121,6 +133,15 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 	if from != "" {
 		lastY = lastY + 40*font.FontScale
 		fw.DrawImage(fromContent.Image(), 110, int(lastY)-10)
+		lastY = lastY + fromHeight
+	}
+	if qrCodeImg != nil {
+		fw.DrawImage(qrCodeImg, 950, int(lastY)+20)
+		lastY = lastY + 20
+		setFontFace(fw, f, qrFontSize)
+		qrTextLength, _ := fw.MeasureString("扫码查看来源")
+		fw.SetHexColor("#313131")
+		drawString(fw, "扫码查看来源", 930-qrTextLength, lastY+15, float64(qrFontSize), 1.8, gg.AlignLeft)
 	}
 
 	buf := new(bytes.Buffer)

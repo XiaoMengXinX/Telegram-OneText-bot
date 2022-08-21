@@ -103,6 +103,9 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			if i == 2 {
 				s.From = strings.ReplaceAll(arg, "\\n", "\n")
 			}
+			if i == 3 {
+				s.Uri = strings.ReplaceAll(arg, "\\n", "\n")
+			}
 		}
 		if err := sendOnetextImg(s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
