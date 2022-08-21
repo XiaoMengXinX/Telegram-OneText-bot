@@ -52,7 +52,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 	if update.Message.Command() == "onetext" {
 		o := onetext.New()
 		o.ReadBytes(onetextJSON)
-		if err := sendOnetextImg(o.Random(), update.Message.Chat.ID, update.Message.MessageID); err != nil {
+		if err := sendOnetextImg(bot, o.Random(), update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}
@@ -83,7 +83,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 		if update.Message.ReplyToMessage.Sticker != nil {
 			s.Text = "[贴纸]"
 		}
-		if err := sendOnetextImg(s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
+		if err := sendOnetextImg(bot, s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}
@@ -120,14 +120,14 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-		if err := sendOnetextImg(s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
+		if err := sendOnetextImg(bot, s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}
 	}
 }
 
-func sendOnetextImg(s onetext.Sentence, chatID int64, messageID int) (err error) {
+func sendOnetextImg(bot *tgbotapi.BotAPI, s onetext.Sentence, chatID int64, messageID int) (err error) {
 	img, err := utils.CreateOnetextImage(s, utils.BuiltinFont)
 	if err != nil {
 		return err
