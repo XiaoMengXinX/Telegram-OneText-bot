@@ -21,14 +21,15 @@ On telegram group or private chat, send the listed command to the bot:
 For example, send the following message to the bot:
 
 ```
-/custom Some random text
+/custom Some\nrandom\ntext
 Author
 Source
+https://example.com/
 ```
 
 Then you will get an onetext image like this:
 
-<img src="https://user-images.githubusercontent.com/19994286/183112855-35acb999-6388-4736-94d5-2f672579c7bc.jpg" width="80%" height="80%">
+<img src="https://user-images.githubusercontent.com/19994286/185791695-faa8cab1-eef4-49ff-97cd-a00906f6e64e.jpg" width="80%" height="80%">
 
 ## Deploy
 
