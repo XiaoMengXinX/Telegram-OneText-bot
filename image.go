@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"image"
-	"image/jpeg"
+	"image/png"
 	"strings"
 
 	onetext "github.com/XiaoMengXinX/OneTextAPI-Go"
@@ -99,9 +99,9 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 	var qrCodeImg image.Image
 	var qrHeight int
 	if s.Uri != "" {
-		qrHeight = 50
+		qrHeight = 60
 		qrCode, _ := qrcode.New(s.Uri, qrcode.Medium)
-		qrCodeImg = qrCode.Image(50)
+		qrCodeImg = qrCode.Image(60)
 	}
 
 	height = height + 55 + int(40*font.FontScale)
@@ -139,13 +139,13 @@ func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
 		fw.DrawImage(qrCodeImg, 950, int(lastY)+20)
 		lastY = lastY + 20
 		setFontFace(fw, f, qrFontSize)
-		qrTextLength, _ := fw.MeasureString("扫码查看来源")
+		qrTextLength, qrTextHeight := fw.MeasureString("扫码查看来源")
 		fw.SetHexColor("#313131")
-		drawString(fw, "扫码查看来源", 930-qrTextLength, lastY+15, float64(qrFontSize), 1.8, gg.AlignLeft)
+		drawString(fw, "扫码查看来源", 930-qrTextLength, lastY+(60-qrTextHeight)/2, float64(qrFontSize), 1.8, gg.AlignLeft)
 	}
 
 	buf := new(bytes.Buffer)
-	err = jpeg.Encode(buf, fw.Image(), nil)
+	err = png.Encode(buf, fw.Image())
 	if err != nil {
 		return nil, err
 	}
