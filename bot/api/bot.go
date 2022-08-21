@@ -112,11 +112,11 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 				s.From = strings.ReplaceAll(arg, "\\n", "\n")
 			}
 			if i == 3 {
-				url, err := shortURL(strings.ReplaceAll(arg, "\\n", "\n"))
+				short, err := shortURL(arg)
 				if err != nil {
 					log.Println(err)
 				} else {
-					s.Uri = url
+					s.Uri = short
 				}
 			}
 		}
