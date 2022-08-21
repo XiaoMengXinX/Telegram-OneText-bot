@@ -133,7 +133,7 @@ func sendOnetextImg(bot *tgbotapi.BotAPI, s onetext.Sentence, chatID int64, mess
 		return err
 	}
 	msg := tgbotapi.NewPhoto(chatID, tgbotapi.FileBytes{
-		Name:  "onetext.jpg",
+		Name:  "onetext.png",
 		Bytes: img,
 	})
 	msg.ReplyToMessageID = messageID
