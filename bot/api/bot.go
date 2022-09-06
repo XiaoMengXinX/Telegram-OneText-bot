@@ -38,13 +38,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	bot.SetAPIEndpoint(tgbotapi.APIEndpoint)
 
-	body, _ := io.ReadAll(r.Body)
-	var update tgbotapi.Update
-	err := json.Unmarshal(body, &update)
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	update, _ := bot.HandleUpdate(r)
 
 	if update.Message == nil {
 		return
@@ -62,7 +56,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Please reply to a message")
 			msg.ParseMode = tgbotapi.ModeMarkdownV2
 			msg.ReplyToMessageID = update.Message.MessageID
-			if _, err = bot.Send(msg); err != nil {
+			if _, err := bot.Send(msg); err != nil {
 				log.Println(err)
 			}
 			return
@@ -93,7 +87,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Please input your custom text\\. Spilt arguments by newline\\.\nFor example:\n```\n/custom Some\\\\nrandom\\\\ntext\nAuthor\nSource\nhttps://example.com```")
 			msg.ParseMode = tgbotapi.ModeMarkdownV2
 			msg.ReplyToMessageID = update.Message.MessageID
-			if _, err = bot.Send(msg); err != nil {
+			if _, err := bot.Send(msg); err != nil {
 				log.Println(err)
 			}
 			return
