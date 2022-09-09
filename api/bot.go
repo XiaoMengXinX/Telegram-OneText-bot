@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	onetext "github.com/XiaoMengXinX/OneTextAPI-Go"
+	utils "github.com/XiaoMengXinX/Telegram-OneText-bot"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"utils"
 )
 
 var onetextJSON []byte

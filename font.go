@@ -9,7 +9,7 @@ type FontConfig struct {
 	FontScale float64
 }
 
-//go:embed fonts/LXGWWenKaiTC-EmojiCompletion.ttf
+//go:embed font/LXGWWenKaiTC-EmojiCompletion.ttf
 var fontFile []byte
 
 var BuiltinFont = FontConfig{
