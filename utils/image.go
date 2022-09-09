@@ -8,12 +8,13 @@ import (
 	"strings"
 
 	"github.com/XiaoMengXinX/OneTextAPI-Go"
+	"github.com/XiaoMengXinX/Telegram-OneText-bot/font"
 	"github.com/fogleman/gg"
 	"github.com/skip2/go-qrcode"
 	"golang.org/x/image/font/opentype"
 )
 
-func CreateOnetextImage(s onetext.Sentence, font FontConfig) ([]byte, error) {
+func CreateOnetextImage(s onetext.Sentence, font font.FontConfig) ([]byte, error) {
 	weight := 1080
 	height := 0
 

@@ -11,12 +11,12 @@ import (
 	"strings"
 
 	"github.com/XiaoMengXinX/OneTextAPI-Go"
-	"github.com/XiaoMengXinX/Telegram-OneText-bot"
+	"github.com/XiaoMengXinX/Telegram-OneText-bot/font"
+	"github.com/XiaoMengXinX/Telegram-OneText-bot/utils"
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 var onetextJSON []byte
-var bot *tgbotapi.BotAPI
 
 type ShortURLResp struct {
 	Token string `json:"token"`
@@ -122,7 +122,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func sendOnetextImg(bot *tgbotapi.BotAPI, s onetext.Sentence, chatID int64, messageID int) (err error) {
-	img, err := utils.CreateOnetextImage(s, utils.BuiltinFont)
+	img, err := utils.CreateOnetextImage(s, font.BuiltinFont)
 	if err != nil {
 		return err
 	}

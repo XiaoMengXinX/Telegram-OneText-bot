@@ -1,4 +1,4 @@
-package utils
+package font
 
 import (
 	_ "embed"
@@ -9,7 +9,7 @@ type FontConfig struct {
 	FontScale float64
 }
 
-//go:embed font/LXGWWenKaiTC-EmojiCompletion.ttf
+//go:embed LXGWWenKaiTC-EmojiCompletion.ttf
 var fontFile []byte
 
 var BuiltinFont = FontConfig{
