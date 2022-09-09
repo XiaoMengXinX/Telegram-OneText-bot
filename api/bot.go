@@ -10,9 +10,9 @@ import (
 	"net/url"
 	"strings"
 
-	onetext "github.com/XiaoMengXinX/OneTextAPI-Go"
-	utils "github.com/XiaoMengXinX/Telegram-OneText-bot"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/XiaoMengXinX/OneTextAPI-Go"
+	"github.com/XiaoMengXinX/Telegram-OneText-bot"
+	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 var onetextJSON []byte

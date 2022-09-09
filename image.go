@@ -7,7 +7,7 @@ import (
 	"image/png"
 	"strings"
 
-	onetext "github.com/XiaoMengXinX/OneTextAPI-Go"
+	"github.com/XiaoMengXinX/OneTextAPI-Go"
 	"github.com/fogleman/gg"
 	"github.com/skip2/go-qrcode"
 	"golang.org/x/image/font/opentype"
