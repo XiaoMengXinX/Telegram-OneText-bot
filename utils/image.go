@@ -14,7 +14,12 @@ import (
 	"golang.org/x/image/font/opentype"
 )
 
-func CreateOnetextImage(s onetext.Sentence, font font.FontConfig) ([]byte, error) {
+type OnetextData struct {
+	onetext.Sentence
+	Image image.Image
+}
+
+func CreateOnetextImage(s OnetextData, font font.FontConfig) ([]byte, error) {
 	weight := 1080
 	height := 0
 

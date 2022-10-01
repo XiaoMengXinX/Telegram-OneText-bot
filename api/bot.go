@@ -1,9 +1,13 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"image"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"log"
 	"net/http"
@@ -14,6 +18,7 @@ import (
 	"github.com/XiaoMengXinX/Telegram-OneText-bot/font"
 	"github.com/XiaoMengXinX/Telegram-OneText-bot/utils"
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"golang.org/x/image/webp"
 )
 
 var onetextJSON []byte
@@ -46,7 +51,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 	if update.Message.Command() == "onetext" {
 		o := onetext.New()
 		o.ReadBytes(onetextJSON)
-		if err := sendOnetextImg(bot, o.Random(), update.Message.Chat.ID, update.Message.MessageID); err != nil {
+		if err := sendOnetextImg(bot, utils.OnetextData{Sentence: o.Random()}, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}
@@ -61,21 +66,39 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-		s := onetext.Sentence{
-			Text: update.Message.ReplyToMessage.Text,
-			By:   update.Message.ReplyToMessage.From.FirstName + " " + update.Message.ReplyToMessage.From.LastName,
-		}
+		s := utils.OnetextData{
+			Sentence: onetext.Sentence{
+				Text: update.Message.ReplyToMessage.Text,
+				By:   update.Message.ReplyToMessage.From.FirstName + " " + update.Message.ReplyToMessage.From.LastName,
+			}}
 		if update.Message.ReplyToMessage.ForwardSenderName != "" {
 			s.By = update.Message.ReplyToMessage.ForwardSenderName
 		}
 		if len(update.Message.ReplyToMessage.Photo) != 0 {
-			s.Text = "[图片]"
+			photoURL, _ := bot.GetFileDirectURL(update.Message.ReplyToMessage.Photo[0].FileID)
+			photo, err := getFile(photoURL)
+			if err != nil {
+				s.Text = fmt.Sprintf("[图片]\n%v", err)
+			}
+			s.Image, _, err = image.Decode(bytes.NewReader(photo))
+			if err != nil {
+				s.Text = fmt.Sprintf("[图片]\n%v", err)
+			}
 			if update.Message.ReplyToMessage.Caption != "" {
 				s.Text += "\n" + update.Message.ReplyToMessage.Caption
 			}
 		}
 		if update.Message.ReplyToMessage.Sticker != nil {
 			s.Text = "[贴纸]"
+			stickerURL, _ := bot.GetFileDirectURL(update.Message.ReplyToMessage.Sticker.FileID)
+			sticker, err := getFile(stickerURL)
+			if err != nil {
+				s.Text = fmt.Sprintf("[贴纸]\n%v", err)
+			}
+			if err != nil {
+				s.Text = fmt.Sprintf("[贴纸]\n%v", err)
+			}
+			s.Image, err = webp.Decode(bytes.NewReader(sticker))
 		}
 		if err := sendOnetextImg(bot, s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
@@ -114,14 +137,14 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-		if err := sendOnetextImg(bot, s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
+		if err := sendOnetextImg(bot, utils.OnetextData{Sentence: s}, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}
 	}
 }
 
-func sendOnetextImg(bot *tgbotapi.BotAPI, s onetext.Sentence, chatID int64, messageID int) (err error) {
+func sendOnetextImg(bot *tgbotapi.BotAPI, s utils.OnetextData, chatID int64, messageID int) (err error) {
 	img, err := utils.CreateOnetextImage(s, font.BuiltinFont)
 	if err != nil {
 		return err
@@ -147,5 +170,15 @@ func shortURL(u string) (short string, err error) {
 		return "", errors.New(respData.Error)
 	}
 	short = fmt.Sprintf("https://xve.me/%s", respData.Token)
+	return
+}
+
+func getFile(url string) (file []byte, err error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	file, err = io.ReadAll(resp.Body)
 	return
 }
