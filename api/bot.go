@@ -78,7 +78,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			s.By = update.Message.ReplyToMessage.ForwardSenderName
 		}
 		if len(update.Message.ReplyToMessage.Photo) != 0 {
-			photoURL, _ := bot.GetFileDirectURL(update.Message.ReplyToMessage.Photo[0].FileID)
+			photoURL, _ := bot.GetFileDirectURL(update.Message.ReplyToMessage.Photo[len(update.Message.ReplyToMessage.Photo)-1].FileID)
 			photo, err := getFile(photoURL)
 			if err != nil {
 				s.Text = fmt.Sprintf("[图片]\n%v", err)
