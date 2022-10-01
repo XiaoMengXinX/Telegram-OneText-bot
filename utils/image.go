@@ -65,6 +65,9 @@ func CreateOnetextImage(s OnetextData, font font.FontConfig) ([]byte, error) {
 	_, oneLineHeight := textContent.MeasureString("字")
 	newLineCount := float64(strings.Count(warpStr, "\n"))
 	imgTextHeight := (newLineCount + 1) * (oneLineHeight * 1.8)
+	if text == "" {
+		imgTextHeight = 0
+	}
 	drawString(textContent, warpStr, 0, 20, float64(textFontSize), 1.8, gg.AlignLeft)
 	height = height + int(imgTextHeight+oneLineHeight*1.8+165*font.FontScale)
 
@@ -133,7 +136,7 @@ func CreateOnetextImage(s OnetextData, font font.FontConfig) ([]byte, error) {
 	lastY := 55 + 110*font.FontScale
 	fw.DrawString("“", 110, lastY)
 	if img != nil {
-		fw.DrawImage(img, 160, int(lastY+55*font.FontScale)-20)
+		fw.DrawImage(img, 240, int(lastY+55*font.FontScale)-20)
 		lastY = lastY + imgHeight
 	}
 	fw.DrawImage(textContent.Image(), 160, int(lastY+55*font.FontScale)-20)
