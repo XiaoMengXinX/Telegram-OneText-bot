@@ -92,7 +92,6 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if update.Message.ReplyToMessage.Sticker != nil {
-			s.Text = "[贴纸]"
 			stickerURL, _ := bot.GetFileDirectURL(update.Message.ReplyToMessage.Sticker.FileID)
 			sticker, err := getFile(stickerURL)
 			if err != nil {
