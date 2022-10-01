@@ -97,10 +97,10 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				s.Text = fmt.Sprintf("[贴纸]\n%v", err)
 			}
+			s.Image, err = webp.Decode(bytes.NewReader(sticker))
 			if err != nil {
 				s.Text = fmt.Sprintf("[贴纸]\n%v", err)
 			}
-			s.Image, err = webp.Decode(bytes.NewReader(sticker))
 		}
 		if err := sendOnetextImg(bot, s, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
