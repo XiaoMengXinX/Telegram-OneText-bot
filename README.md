@@ -10,7 +10,7 @@ Built-in font: [LxgwWenKai](https://github.com/lxgw/LxgwWenKai)
 
 ## Usage
 
-On telegram group or private chat, send the listed command to the bot:
+On telegram group or private chat, send listed command to the bot:
 
 `/onetext` - Get an onetext image
 
@@ -33,11 +33,11 @@ Then you will get an onetext image like this:
 
 ## Deploy
 
-**Notice: The Root Directory need to be set to "bot".**
+**Notice: The Root Directory need to be set as "bot".**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FXiaoMengXinX%2FTelegram-OneText-bot)
 
-After your deployment on vercel, set the webhook url of the bot by requesting bot api like this:
+After your deploying on vercel, set the webhook url of the bot by requesting bot api like this:
 
 ```
 https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook?url=https://<YOUR_DEPLOYMENT_URL>/<YOUR_BOT_TOKEN>
