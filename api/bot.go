@@ -43,7 +43,10 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	bot.SetAPIEndpoint(tgbotapi.APIEndpoint)
 
-	update, _ := bot.HandleUpdate(r)
+	update, err := bot.HandleUpdate(r)
+	if err != nil {
+		return
+	}
 
 	if update.Message == nil {
 		return
