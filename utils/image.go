@@ -10,6 +10,7 @@ import (
 	"github.com/XiaoMengXinX/OneTextAPI-Go"
 	"github.com/XiaoMengXinX/Telegram-OneText-bot/font"
 	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
 	"github.com/skip2/go-qrcode"
 	"golang.org/x/image/font/opentype"
 )
@@ -21,7 +22,7 @@ type OnetextData struct {
 
 func CreateOnetextImage(s OnetextData, font font.FontConfig) ([]byte, error) {
 	weight := 1080
-	height := 0
+	height := 55
 
 	// default font size is for canger.ttf
 	var textFontSize = int(59 * font.FontScale)
@@ -47,6 +48,14 @@ func CreateOnetextImage(s OnetextData, font font.FontConfig) ([]byte, error) {
 		return nil, err
 	}
 
+	var img image.Image
+	var imgHeight float64
+	if s.Image != nil {
+		img = resize.Resize(600, 0, s.Image, resize.Lanczos3)
+		imgHeight = float64(img.Bounds().Dy()) + 40*font.FontScale
+		height = height + int(imgHeight)
+	}
+
 	textContent := gg.NewContext(1080, 3000)
 	textContent.SetHexColor("#FFFFFF")
 	setFontFace(textContent, f, textFontSize)
@@ -57,7 +66,7 @@ func CreateOnetextImage(s OnetextData, font font.FontConfig) ([]byte, error) {
 	newLineCount := float64(strings.Count(warpStr, "\n"))
 	imgTextHeight := (newLineCount + 1) * (oneLineHeight * 1.8)
 	drawString(textContent, warpStr, 0, 20, float64(textFontSize), 1.8, gg.AlignLeft)
-	height = int(imgTextHeight + oneLineHeight*1.8 + 165*font.FontScale + 55)
+	height = height + int(imgTextHeight+oneLineHeight*1.8+165*font.FontScale)
 
 	byContent := gg.NewContext(weight, 200)
 	byContent.SetHexColor("#FFFFFF")
@@ -123,6 +132,10 @@ func CreateOnetextImage(s OnetextData, font font.FontConfig) ([]byte, error) {
 	fw.SetRGB(0, 0, 0)
 	lastY := 55 + 110*font.FontScale
 	fw.DrawString("“", 110, lastY)
+	if img != nil {
+		fw.DrawImage(img, 160, int(lastY+55*font.FontScale)-20)
+		lastY = lastY + imgHeight
+	}
 	fw.DrawImage(textContent.Image(), 160, int(lastY+55*font.FontScale)-20)
 	lastY = imgTextHeight + oneLineHeight*1.8 + lastY + 55*font.FontScale
 	fw.DrawString("”", 940, lastY)
