@@ -152,8 +152,8 @@ func CreateOnetextImage(s OnetextData, font font.FontConfig) ([]byte, error) {
 		fw.DrawImage(timeContent.Image(), 0, int(lastY)-10)
 		lastY = lastY + 70*font.FontScale
 	}
+	lastY = lastY + 40*font.FontScale
 	if from != "" {
-		lastY = lastY + 40*font.FontScale
 		fw.DrawImage(fromContent.Image(), 110, int(lastY)-10)
 		lastY = lastY + fromHeight
 	}
