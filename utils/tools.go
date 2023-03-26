@@ -15,40 +15,6 @@ import (
 var symbolsReg = regexp.MustCompile("^[a-zA-Z|{P}| ]$")
 var symbols = "？！，。、；：”’）》〉】』」〕…—～﹏" + `]})>!?:;,.~\|/`
 
-func setFontFace(gc *gg.Context, f *opentype.Font, point int) {
-	face, _ := opentype.NewFace(f, &opentype.FaceOptions{
-		Size: float64(point),
-		DPI:  72,
-	})
-	gc.SetFontFace(face)
-	v := reflect.ValueOf(gc).Elem().FieldByName("fontHeight")
-	reflect.NewAt(v.Type(), unsafe.Pointer(v.UnsafeAddr())).Elem().Set(reflect.ValueOf(float64(point * 72 / 96)))
-}
-
-func drawString(dc *gg.Context, s string, x, y, width, lineSpacing float64, align gg.Align) {
-	lines := strings.Split(s, "\n")
-	var ax, ay float64
-
-	h := float64(len(lines)) * dc.FontHeight() * lineSpacing
-	h -= (lineSpacing - 1) * dc.FontHeight()
-
-	switch align {
-	case gg.AlignLeft:
-		ax = 0
-	case gg.AlignCenter:
-		ax = 0.5
-		x += width / 2
-	case gg.AlignRight:
-		ax = 1
-		x += width
-	}
-	ay = 1
-	for _, line := range lines {
-		dc.DrawStringAnchored(line, x, y, ax, ay)
-		y += dc.FontHeight() * lineSpacing
-	}
-}
-
 func strWrapper(dc *gg.Context, str string, maxTextWidth float64) (warpStr string) {
 	if str == "" {
 		return ""
@@ -80,6 +46,7 @@ func truncateText(dc *gg.Context, textSlice []string, count int, maxTextWidth fl
 	var result []string
 	for _, r := range textSlice[count:] {
 		if r == "\n" {
+			result = append(result, r)
 			break
 		}
 		tmpStr = tmpStr + r
@@ -119,4 +86,38 @@ func splitWords(str string) []string {
 		result = append(result, tmpStr)
 	}
 	return result
+}
+
+func setFontFace(gc *gg.Context, f *opentype.Font, point int) {
+	face, _ := opentype.NewFace(f, &opentype.FaceOptions{
+		Size: float64(point),
+		DPI:  72,
+	})
+	gc.SetFontFace(face)
+	v := reflect.ValueOf(gc).Elem().FieldByName("fontHeight")
+	reflect.NewAt(v.Type(), unsafe.Pointer(v.UnsafeAddr())).Elem().Set(reflect.ValueOf(float64(point * 72 / 96)))
+}
+
+func drawString(dc *gg.Context, s string, x, y, width, lineSpacing float64, align gg.Align) {
+	lines := strings.Split(s, "\n")
+	var ax, ay float64
+
+	h := float64(len(lines)) * dc.FontHeight() * lineSpacing
+	h -= (lineSpacing - 1) * dc.FontHeight()
+
+	switch align {
+	case gg.AlignLeft:
+		ax = 0
+	case gg.AlignCenter:
+		ax = 0.5
+		x += width / 2
+	case gg.AlignRight:
+		ax = 1
+		x += width
+	}
+	ay = 1
+	for _, line := range lines {
+		dc.DrawStringAnchored(line, x, y, ax, ay)
+		y += dc.FontHeight() * lineSpacing
+	}
 }

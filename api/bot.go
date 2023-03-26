@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/XiaoMengXinX/OneTextAPI-Go"
@@ -54,7 +55,15 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 	if update.Message.Command() == "onetext" {
 		o := onetext.New()
 		o.ReadBytes(onetextJSON)
-		if err := sendOnetextImg(bot, utils.OnetextData{Sentence: o.Random()}, update.Message.Chat.ID, update.Message.MessageID); err != nil {
+		var sentence onetext.Sentence
+		if update.Message.CommandArguments() != "" {
+			index, _ := strconv.Atoi(update.Message.CommandArguments())
+			sentence = o.Get(index)
+		}
+		if sentence.Text == "" {
+			sentence = o.Random()
+		}
+		if err := sendOnetextImg(bot, utils.OnetextData{Sentence: sentence}, update.Message.Chat.ID, update.Message.MessageID); err != nil {
 			log.Println(err)
 			return
 		}

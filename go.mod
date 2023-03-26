@@ -3,7 +3,7 @@ module github.com/XiaoMengXinX/Telegram-OneText-bot
 go 1.18
 
 require (
-	github.com/XiaoMengXinX/OneTextAPI-Go v0.0.0-20220121152125-864a1aabac29
+	github.com/XiaoMengXinX/OneTextAPI-Go v0.0.0-20230326152203-780145232a37
 	github.com/fogleman/gg v1.3.0
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
