@@ -19,7 +19,8 @@ import (
 	"github.com/XiaoMengXinX/Telegram-OneText-bot/font"
 	"github.com/XiaoMengXinX/Telegram-OneText-bot/utils"
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"golang.org/x/image/webp"
+	"github.com/kolesa-team/go-webp/decoder"
+	"github.com/kolesa-team/go-webp/webp"
 )
 
 var onetextJSON []byte
@@ -106,7 +107,7 @@ func BotHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				s.Text = fmt.Sprintf("[贴纸]\n%v", err)
 			}
-			s.Image, err = webp.Decode(bytes.NewReader(sticker))
+			s.Image, err = webp.Decode(bytes.NewReader(sticker), &decoder.Options{})
 			if err != nil {
 				s.Text = fmt.Sprintf("[贴纸]\n%v", err)
 			}
